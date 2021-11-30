@@ -1,0 +1,34 @@
+version: '3.6'
+
+services:
+  db:
+    image: mongo
+    restart: always
+    # command: --smallfiles
+    volumes:
+      - data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: user_svc
+      MONGO_INITDB_ROOT_PASSWORD: Abc123
+    ports:
+      - "27018:27017"
+  user_svc:
+    env_file: .env
+    depends_on:
+      - db
+    build:
+      context: ./user_svc
+    working_dir: /go/src/user_svc
+    volumes:
+      - ./user_svc:/go/src/user_svc
+    restart: always
+    command: sh -c "go mod download && fresh"
+    environment:
+      DB_URI: mongodb://user_svc:Abc123@db:27017
+      # mongodb://mgadmin:grapplEmgT1@db:27017/api
+    ports:
+      - "8080:8081"
+    links:
+      - db
+volumes:
+  data:

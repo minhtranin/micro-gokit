@@ -1,0 +1,7 @@
+POST http://localhost:8080/create HTTP/1.1
+content-type: application/json
+
+{
+    "email": "minhtran.in@outlook.com",
+    "password": "123456789"
+}
